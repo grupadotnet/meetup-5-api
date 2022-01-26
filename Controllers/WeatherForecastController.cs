@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace meetup_5_api.Controllers;
 
@@ -6,9 +8,13 @@ namespace meetup_5_api.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
+    private static List<User> Users = new List<User>
     {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        new User(1, "Jarek", "dsa@dsa.pl"),
+        new User(2, "Arek", "dsa@dsa.pl"),
+        new User(3, "Czarek", "dsa@dsa.pl"),
+        new User(4, "Marian", "dsa@dsa.pl"),
+        new User(5, "Krzysztof", "dsa@dsa.pl"),
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
@@ -19,14 +25,15 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<WeatherForecast> Get()
+    public IEnumerable<User> Get()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        return Users;
+    }
+
+    [HttpDelete]
+    public bool Delete(int id)
+    {
+        Users = Users.Where(user => !user.Id.Equals(id)).ToList();
+        return true;
     }
 }
